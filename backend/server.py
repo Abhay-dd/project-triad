@@ -935,28 +935,35 @@ app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(GZipMiddleware, minimum_size=1024)
 
 # ----------------------------- Serve Static Frontend -----------------------------
-FRONTEND_BUILD_DIR = Path(os.path.dirname(__file__)).joinpath("../frontend/build").resolve()
+frontend_path = os.path.join(os.path.dirname(__file__), "frontend_build")
 
-if FRONTEND_BUILD_DIR.exists():
-    static_dir = FRONTEND_BUILD_DIR / "static"
-    if static_dir.exists():
-        app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
+# Mount /static only when the build folder exists (guards against startup crash).
+# The folder is created during the Render build step via `cp -r build ../backend/frontend_build`.
+_static_dir = os.path.join(frontend_path, "static")
+if os.path.isdir(_static_dir):
+    app.mount("/static", StaticFiles(directory=_static_dir), name="static")
 
-    @app.get("/{path:path}")
-    async def serve_frontend(path: str):
-        if path.startswith("api/") or path.startswith("api"):
-            raise HTTPException(status_code=404, detail="Not Found")
 
-        safe_path = (FRONTEND_BUILD_DIR / path).resolve()
-        try:
-            safe_path.relative_to(FRONTEND_BUILD_DIR)
-        except ValueError:
-            raise HTTPException(status_code=400, detail="Invalid path")
+# Catch-all: ALWAYS registered so React Router paths (/projects, /about, …)
+# never return a FastAPI 404. Non-API requests fall through to index.html.
+@app.get("/{full_path:path}")
+async def serve_react(full_path: str):
+    # Let /api/* routes surface their own 404 from FastAPI
+    if full_path.startswith("api") or full_path.startswith("api/"):
+        raise HTTPException(status_code=404, detail="Not Found")
 
-        if safe_path.is_file():
-            return FileResponse(str(safe_path))
+    index_file = os.path.join(frontend_path, "index.html")
+    if not os.path.isfile(index_file):
+        raise HTTPException(
+            status_code=503,
+            detail="Frontend not built yet — run `npm run build` and copy to backend/frontend_build"
+        )
 
-        index_path = FRONTEND_BUILD_DIR / "index.html"
-        if index_path.exists():
-            return FileResponse(str(index_path))
-        raise HTTPException(status_code=404, detail="Frontend index.html not found")
+    # Serve a specific file if it exists (e.g. favicon.ico, manifest.json)
+    requested_file = os.path.join(frontend_path, full_path)
+    if full_path and os.path.isfile(requested_file):
+        return FileResponse(requested_file)
+
+    # All other paths → hand off to React Router
+    return FileResponse(index_file)
+

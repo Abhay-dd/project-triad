@@ -1,13 +1,13 @@
 services:
+  # ── Backend Web Service (serves both API and built React frontend) ──────────
   - type: web
     name: triad-realty
     runtime: python
-    # ─── Root directory is the backend folder ───────────────────────────────────
-    # All Python imports (server.py, db.py, etc.) are resolved from here.
-    # The buildCommand navigates one level up to build the React app first.
+    # Root directory is the backend folder; Python imports resolve from here.
+    # The buildCommand navigates up to build the React app first.
     rootDir: backend
     buildCommand: |
-      cd ../frontend && npm install --legacy-peer-deps && npm run build && cd ../backend && pip install -r requirements.txt
+      cd ../frontend && npm install --legacy-peer-deps && npm run build && cp -r build ../backend/frontend_build && cd ../backend && pip install -r requirements.txt
     startCommand: uvicorn server:app --host 0.0.0.0 --port $PORT
     plan: free
 
@@ -18,9 +18,20 @@ services:
       - key: PORT
         value: "10000"
 
+      # ── Environment flag (activates JWT secret enforcement) ───────────────────
+      - key: ENVIRONMENT
+        value: production
+
+      # ── Frontend API URL injected at build time ────────────────────────────────
+      # The frontend uses REACT_APP_BACKEND_URL to form the API base URL.
+      # In production the backend serves the frontend, so leave it empty ("").
+      # An empty string makes config.js fall back to a relative path (/api/...).
+      - key: REACT_APP_BACKEND_URL
+        value: ""
+
       # ── Database (set in Render Dashboard → Environment) ──────────────────────
       - key: MONGO_URI
-        sync: false          # mark sync:false so Render prompts you to fill it in
+        sync: false   # Render will prompt you to fill this in
 
       # ── Auth ──────────────────────────────────────────────────────────────────
       - key: JWT_SECRET
@@ -30,9 +41,10 @@ services:
       - key: DEVELOPER_PASSWORD
         sync: false
 
-      # ── CORS — update to your real Render URL after first deploy ──────────────
+      # ── CORS — backend serves the built frontend, so only its own origin ──────
+      # If you later split into two separate Render services, add the frontend URL.
       - key: CORS_ORIGINS
-        value: https://triad-realty.onrender.com
+        value: https://project-triad-12.onrender.com,https://triad-realty.onrender.com
 
       # ── Optional: external Reelly listings API ────────────────────────────────
       - key: REELLY_API_KEY

@@ -1,0 +1,99 @@
+{
+  "theme": "dark_hybrid",
+  "archetype": "Jewel & Luxury",
+  "design_philosophy": "Editorial, cinematic, and sophisticated. Emphasizing Dubai's luxury real estate through large-scale photography, generous whitespace, asymmetrical grids, and refined typography. Avoid generic SaaS visuals, purple/teal gradients, or typical real estate grid layouts.",
+  "colors": {
+    "primary": "#C5A059",
+    "primary_hover": "#D4AF37",
+    "background_dark": "#0A0A0A",
+    "background_light": "#FAFAFA",
+    "surface_dark": "#141414",
+    "surface_light": "#FFFFFF",
+    "text_light": "#FAFAFA",
+    "text_muted_light": "#A1A1AA",
+    "text_dark": "#0A0A0A",
+    "text_muted_dark": "#4A4A4A",
+    "border_dark": "#27272A",
+    "border_light": "#E5E5E5",
+    "gold_gradient": "linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C)",
+    "rules": [
+      "Use #0A0A0A instead of #000000 for depth.",
+      "Tint greys slightly with warmth to match the gold accents.",
+      "Never use full-screen color gradients. Use grain or noise textures instead.",
+      "Hover states on dark must shift to a slightly lighter grey or illuminate the border."
+    ]
+  },
+  "typography": {
+    "heading_font": "Cormorant Garamond, serif",
+    "body_font": "Outfit, sans-serif",
+    "rules": [
+      "Headlines > 32px MUST use tracking-tight or tracking-tighter.",
+      "Overlines MUST be uppercase, tiny (text-xs), and wide spacing (tracking-[0.2em]).",
+      "Line height: leading-none for headers, leading-relaxed for body.",
+      "Maximum heading size: text-6xl (fluid). Do not use text-7xl+.",
+      "Avoid Inter, Roboto, Poppins entirely."
+    ]
+  },
+  "layout_and_spacing": {
+    "strategy": "Generous Spacing Philosophy. Use 2-3x more spacing than typical templates.",
+    "scale": "p-12, p-16, p-24 for section paddings.",
+    "grid_system": "Bento grid protocol. Mix 3+ shapes (Hero, Square, Tall, Filler) for asymmetry. Grid items MUST be direct children.",
+    "alignment": "Optical alignment over geometrical. Left-align dense content and paragraphs.",
+    "borders": "Use 'Grid Borders' (The Technical Look) or 'Crystal Glassmorphism' for structure. Thin 1px borders (border-border/40)."
+  },
+  "components": {
+    "header": {
+      "style": "Crystal Glassmorphism",
+      "classes": "backdrop-blur-xl bg-white/80 dark:bg-black/70 border-b border-white/20 dark:border-white/10 z-50 sticky top-0"
+    },
+    "hero": {
+      "style": "Photography-first with subtle Ken-Burns zoom. Maximum dark overlay bg-black/40.",
+      "layout": "Asymmetrical text placement, bold typography."
+    },
+    "cards": {
+      "style": "Cardless or flat rectangles. Subtle 1px borders. NO heavy drop shadows. Sharp or slightly rounded corners (max rounded-sm)."
+    },
+    "forms": {
+      "style": "Editorial inputs. Use Shadcn customized components. Thin bottom borders or minimalist rectangles. No native browser inputs."
+    },
+    "charts": {
+      "style": "Shadcn charts (recharts). Accessible, using primary gold and neutral greys. Minimalist grid lines."
+    }
+  },
+  "motion_and_interactions": {
+    "scrolling": "Lenis smooth scrolling recommended for premium momentum feel.",
+    "animations": "Subtle parallax for images. Staggered fade-up for lists. Framer motion 3D transforms for hover states (slight lift/rotate).",
+    "accessibility": "Respect prefers-reduced-motion. Ensure focus states have high contrast (gold ring)."
+  },
+  "pages_and_features": {
+    "home": "Hero with slideshow (Ken-Burns), About Us summary, Latest Launches (Cards), Top Communities, Team slider, Google Reviews, Popups for new launches. REMOVE generic services grid.",
+    "about_us": "Journey timeline, Founders and Team with high-end portrait layouts and social links.",
+    "projects": "Floating hot launches. Off-plan properties grid with advanced search + filters. Detailed inner pages (Gallery, Floor Plan, Amenities, Map, Payment Plan, Comparative Analysis, History). Brochure download form.",
+    "comparative_analysis": "Market data visualization. Data-heavy but styled minimally using grid borders.",
+    "experience_gallery": "Immersive image masonry or bento layout. Large lightboxes.",
+    "blogs": "Editorial layout, magazine-like typography, large feature images.",
+    "careers": "Refined layout for open positions and company culture.",
+    "contact": "Map integration (dark mode map style preferred), sophisticated contact form, social links."
+  },
+  "media": {
+    "image_urls": {
+      "hero_backgrounds": [
+        "https://images.unsplash.com/photo-1768069794857-9306ac167c6e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTF8MHwxfHNlYXJjaHwxfHxkdWJhaSUyMHNreWxpbmUlMjBnb2xkZW4lMjBob3VyfGVufDB8fHx8MTc3ODU4NzI2OHww&ixlib=rb-4.1.0&q=85",
+        "https://images.unsplash.com/photo-1772175057193-5f58ed26a785?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTF8MHwxfHNlYXJjaHwzfHxkdWJhaSUyMHNreWxpbmUlMjBnb2xkZW4lMjBob3VyfGVufDB8fHx8MTc3ODU4NzI2OHww&ixlib=rb-4.1.0&q=85"
+      ],
+      "project_exteriors": [
+        "https://images.unsplash.com/photo-1735320859351-61dd67be547e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNzl8MHwxfHNlYXJjaHwyfHxkdWJhaSUyMGx1eHVyeSUyMHZpbGxhJTIwZXh0ZXJpb3J8ZW58MHx8fHwxNzc4NTg3MjY4fDA&ixlib=rb-4.1.0&q=85",
+        "https://images.unsplash.com/photo-1696880443820-3bc2838a0be0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNzl8MHwxfHNlYXJjaHwxfHxkdWJhaSUyMGx1eHVyeSUyMHZpbGxhJTIwZXh0ZXJpb3J8ZW58MHx8fHwxNzc4NTg3MjY4fDA&ixlib=rb-4.1.0&q=85",
+        "https://images.unsplash.com/photo-1709153880759-ed27e0590618?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNzl8MHwxfHNlYXJjaHw0fHxkdWJhaSUyMGx1eHVyeSUyMHZpbGxhJTIwZXh0ZXJpb3J8ZW58MHx8fHwxNzc4NTg3MjY4fDA&ixlib=rb-4.1.0&q=85"
+      ],
+      "project_interiors": [
+        "https://images.unsplash.com/photo-1638454795595-0a0abf68614d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2OTF8MHwxfHNlYXJjaHwyfHxsdXh1cnklMjBhcGFydG1lbnQlMjBpbnRlcmlvciUyMG1vZGVybnxlbnwwfHx8fDE3Nzg1ODcyNjh8MA&ixlib=rb-4.1.0&q=85",
+        "https://images.unsplash.com/photo-1715985160053-d339e8b6eb94?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2OTF8MHwxfHNlYXJjaHwzfHxsdXh1cnklMjBhcGFydG1lbnQlMjBpbnRlcmlvciUyMG1vZGVybnxlbnwwfHx8fDE3Nzg1ODcyNjh8MA&ixlib=rb-4.1.0&q=85"
+      ]
+    },
+    "icons": "Use @phosphor-icons/react (Duotone weight) for a high-end luxury feel.",
+    "rules": "NEVER use placeholder services (e.g., via.placeholder.com). Use the provided image URLs or random unsplash sources."
+  },
+  "testing": "All interactive and key informational elements MUST include a data-testid attribute (kebab-case, role-based, e.g., data-testid='contact-submit-button').",
+  "instructions_to_main_agent": "1. Build pages in .js/.jsx (NOT .tsx). 2. Use Shadcn components for forms/data, but custom HTML/Tailwind for marketing layouts. 3. Ensure the aesthetic is distinctly dark-hybrid with gold accents. No purple. No generic templates."
+}

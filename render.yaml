@@ -1,0 +1,42 @@
+services:
+  - type: web
+    name: triad-realty
+    runtime: python
+    # ─── Root directory is the backend folder ───────────────────────────────────
+    # All Python imports (server.py, db.py, etc.) are resolved from here.
+    # The buildCommand navigates one level up to build the React app first.
+    rootDir: backend
+    buildCommand: |
+      cd ../frontend && npm install --legacy-peer-deps && npm run build && cd ../backend && pip install -r requirements.txt
+    startCommand: uvicorn server:app --host 0.0.0.0 --port $PORT
+    plan: free
+
+    envVars:
+      # ── Runtime ────────────────────────────────────────────────────────────────
+      - key: PYTHON_VERSION
+        value: "3.11.0"
+      - key: PORT
+        value: "10000"
+
+      # ── Database (set in Render Dashboard → Environment) ──────────────────────
+      - key: MONGO_URI
+        sync: false          # mark sync:false so Render prompts you to fill it in
+
+      # ── Auth ──────────────────────────────────────────────────────────────────
+      - key: JWT_SECRET
+        sync: false
+      - key: DEVELOPER_EMAIL
+        value: developer@triad.ae
+      - key: DEVELOPER_PASSWORD
+        sync: false
+
+      # ── CORS — update to your real Render URL after first deploy ──────────────
+      - key: CORS_ORIGINS
+        value: https://triad-realty.onrender.com
+
+      # ── Optional: external Reelly listings API ────────────────────────────────
+      - key: REELLY_API_KEY
+        sync: false
+
+    # Health-check hits the /api/ root endpoint defined in server.py
+    healthCheckPath: /api/

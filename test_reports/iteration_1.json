@@ -1,0 +1,42 @@
+{
+  "summary": "Triad Realty UAE full-stack: backend = 17/17 pytest pass, frontend critical flows pass (home, projects+filters, project detail 8 tabs, brochure modal -> /api/leads, contact -> /api/contacts). All data-testid hooks present on Home launch cards, project cards, project detail tabs, brochure/contact/application form fields. MongoDB persistence verified (no _id in responses).",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {"flow": "Careers application submission", "issue": "Form submit clicked but no row arrived in /api/applications from playwright run. Likely the Careers form requires choosing a specific position (data-testid='position-*' Apply button) before fields are usable; my test only filled name/email/phone. Needs main agent to verify position field is auto-populated or has a select with data-testid. Backend POST /api/applications itself works (verified by direct pytest).", "affected_selectors": ["[data-testid='app-position']", "[data-testid='app-submit']"]}
+    ],
+    "design_issues": [
+      {"screen": "New-launch popup on Home", "issues": ["Popup is visible (Marina Aurora pre-launch card bottom-left), but the close affordance is an unlabeled `×` glyph not exposed via a data-testid like 'popup-close'. Add data-testid='popup-close' to make it testable and easier to dismiss."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_triad_api.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "Add data-testid='popup-close' to the new-launch popup close button on Home.",
+    "Verify Careers Apply flow: ensure clicking a position's Apply scrolls to and pre-fills the form's hidden position value, OR expose a [data-testid='app-position'] select; otherwise the application form will 422 with missing 'position'.",
+    "(Optional) Add [data-testid='blog-card-{id}'] on Blogs index cards (Playwright selector found 0 with article/blog-card; cards likely render as divs)."
+  ],
+  "critical_code_review_comments": [
+    "server.py: list_projects type=Apartment filter uses ==, that's fine but the 'q' search only scans name/description/location — that already covers Marina via the 'Dubai Marina' location, good.",
+    "server.py POST endpoints return Lead/Contact/Application Pydantic models which serialize cleanly without Mongo _id (insert_one happens after building the model and we don't reuse the dict after insertion — no _id leak risk). Verified via /api/leads list which also strips _id with projection.",
+    "server.py uses deprecated @app.on_event('shutdown'); FastAPI recommends lifespan handlers — minor, non-blocking.",
+    "Frontend BrochureModal posts to ${BACKEND_URL}/api/leads — confirmed reaching backend (lead row created with email pw_brochure@example.com).",
+    "Single-file server.py (~490 lines) is below the 700-line limit; acceptable but seed data (PROJECTS/BLOGS/CAREERS) should ideally move to backend/data/seed.py for maintainability."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_triad_api.py"
+  ],
+  "success_rate": {"backend": "100%", "frontend": "~92%"},
+  "test_credentials": "N/A — no auth in this app",
+  "seed_data_creation": "Created via test forms: leads (test_lead@example.com, pw_brochure@example.com), contacts (test_contact@example.com, pw_contact@example.com), applications (test_app@example.com). All TEST_-prefixed names.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend pytest suite at /app/backend/tests/test_triad_api.py covers all 11 endpoints + filter combinations + 422 validation. Re-run with `pytest /app/backend/tests/test_triad_api.py -v`. For frontend, project detail tabs are data-testid='tab-details|gallery|floor-plan|amenities|location|payment-plan|comparison|transactions'; brochure modal fields are brochure-name/email/phone with brochure-submit. Careers application flow needs position pre-fill verification (see action items).",
+  "rca of the issue": "No critical issues. The Careers form submit in Playwright did not result in a backend record — most plausible RCA: the 'position' field is bound to a state value set only when user clicks an Apply button on one of the 4 position cards. My test filled only name/email/phone, so the POST failed Pydantic validation (position required). Repro: open /careers, fill name/email/phone WITHOUT clicking any 'Apply for this role' first, submit -> expect 422. Mitigation: either default position to the first role, or pre-select via Apply CTA + add data-testid for the select."
+}

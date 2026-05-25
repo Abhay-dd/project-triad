@@ -67,11 +67,19 @@ export default function TeamMember() {
             {/* Photo */}
             <div className="lg:col-span-4">
               <div className="w-full aspect-[3/4] bg-[var(--line)] img-zoom">
-                <img
-                  src={member.photo}
-                  alt={member.name}
-                  className="w-full h-full object-cover"
-                />
+                {member.photo ? (
+                  <img
+                    src={member.photo}
+                    alt={member.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-[var(--ink)] text-white">
+                    <span className="font-display text-7xl text-[var(--gold)]">
+                      {member.name.split(" ").map((part) => part[0]).join("").slice(0, 2)}
+                    </span>
+                  </div>
+                )}
               </div>
 
               {/* Contact strip under photo */}
@@ -129,7 +137,7 @@ export default function TeamMember() {
 
             {/* Bio & Details */}
             <div className="lg:col-span-8">
-              <div className="overline text-[var(--gold-deep)]">{member.role}</div>
+              <div className="overline text-[var(--gold-deep)]">{member.role || "Property Consultant"}</div>
               <h1 className="font-display text-5xl md:text-7xl mt-4 leading-none">{member.name}</h1>
 
               {(member.expertise || member.focus) && (

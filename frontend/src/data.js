@@ -221,44 +221,44 @@ export const COMMUNITIES = [
 
 export const REVIEWS = [
   {
-    name: "Maria Rodriguez",
-    country: "Spain",
-    role: "International Investor",
+    name: "Client Review 01",
+    country: "UAE",
+    role: "Off-Plan Buyer",
     rating: 5,
     quote:
-      "Triad made my Dubai investment journey seamless. Their Marina selection appreciated 15% in 18 months. Exceptional market knowledge and discretion.",
+      "Triad explained every launch, payment plan, and risk with complete clarity. I felt informed at each step and confident before booking my unit.",
   },
   {
-    name: "Ahmed Hassan",
+    name: "Client Review 02",
     country: "UAE",
     role: "Business Owner",
     rating: 5,
     quote:
-      "From off-plan selection to payment terms, the team negotiated outcomes I couldn't have reached alone. The post-sales follow-through is what sets them apart.",
+      "The team understood my budget quickly, shortlisted serious options, and handled the negotiation professionally. Their follow-up after booking was excellent.",
   },
   {
-    name: "Sophie Chen",
-    country: "Singapore",
-    role: "Investment Consultant",
+    name: "Client Review 03",
+    country: "India",
+    role: "Portfolio Investor",
     rating: 5,
     quote:
-      "Transparency and results. I've built a multi-asset Dubai portfolio with Triad over three years and the analytics they share post-purchase are best-in-class.",
+      "What stood out was the transparency. Triad compared communities, rental potential, and exit options in a way that made the decision process simple.",
   },
   {
-    name: "James Mitchell",
+    name: "Client Review 04",
     country: "United Kingdom",
-    role: "Entrepreneur",
+    role: "International Buyer",
     rating: 5,
     quote:
-      "Honest, sharp, and quick. Found me a Downtown unit 9% below comparable resale within three weeks. Bought a second through them shortly after.",
+      "Buying from overseas felt much easier with Triad managing the details. They were responsive, honest, and careful with every document and deadline.",
   },
   {
-    name: "Fatima Al-Zahra",
+    name: "Client Review 05",
     country: "UAE",
-    role: "Doctor",
+    role: "Family Buyer",
     rating: 5,
     quote:
-      "Family-focused, patient, and knowledgeable. They understood the schooling brief immediately and shortlisted three Jumeirah Village townhouses we loved.",
+      "They listened to our family needs first, then suggested communities that matched our lifestyle, schools, and long-term plans. The guidance felt personal.",
   },
 ];
 

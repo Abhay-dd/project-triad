@@ -249,13 +249,21 @@ export default function Home() {
             {team.filter((t) => t && t.name).map((t) => (
               <div key={t.id || t.name} className="group" data-testid={`team-${t.name.toLowerCase().replace(/\s+/g, "-")}`}>
                 <div className="aspect-[3/4] img-zoom bg-[var(--surface-dark,#141414)] relative">
-                  <img src={t.photo} alt={t.name} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
+                  {t.photo ? (
+                    <img src={t.photo} alt={t.name} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-white/5 text-white">
+                      <span className="font-display text-6xl text-[var(--gold)]">
+                        {t.name.split(" ").map((part) => part[0]).join("").slice(0, 2)}
+                      </span>
+                    </div>
+                  )}
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                      <Link to={`/team/${t.id}`} className="btn-gold !px-6 !py-3">View More</Link>
                   </div>
                 </div>
                 <h3 className="font-display text-2xl mt-5">{t.name}</h3>
-                <p className="overline opacity-60 mt-1">{t.role}</p>
+                <p className="overline opacity-60 mt-1">{t.role || "Property Consultant"}</p>
                 <div className="flex gap-3 mt-4 text-xs opacity-80">
                   <a href={`tel:${(t.phone || "").replace(/\s/g, "")}`} className="flex items-center gap-1 hover:text-[var(--gold)]"><Phone size={12} />Call</a>
                   <a href={`mailto:${t.email}`} className="flex items-center gap-1 hover:text-[var(--gold)]"><Mail size={12} />Email</a>
@@ -275,8 +283,8 @@ export default function Home() {
         <div className="container-x">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
             <div className="lg:col-span-4">
-              <div className="overline text-[var(--gold-deep)]">Google Reviews</div>
-              <h2 className="font-display text-4xl md:text-5xl mt-3 leading-tight">Five stars, five hundred times.</h2>
+              <div className="overline text-[var(--gold-deep)]">Client Testimonials</div>
+              <h2 className="font-display text-4xl md:text-5xl mt-3 leading-tight">Trusted advice, clear outcomes.</h2>
               <div className="mt-8 flex items-center gap-3">
                 <div className="flex">
                   {Array.from({ length: 5 }).map((_, i) => (
@@ -284,7 +292,7 @@ export default function Home() {
                   ))}
                 </div>
                 <div className="font-display text-2xl">4.9</div>
-                <div className="text-xs text-[var(--muted)]">on 500+ reviews</div>
+                <div className="text-xs text-[var(--muted)]">average client rating</div>
               </div>
             </div>
 

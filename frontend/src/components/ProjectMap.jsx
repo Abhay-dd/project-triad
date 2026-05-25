@@ -53,7 +53,7 @@ function ProjectPopupContent({ properties }) {
   const property = properties[index];
 
   return (
-    <div className="overflow-hidden bg-white font-sans text-sm w-[300px]">
+    <div className="overflow-hidden bg-white font-sans text-sm w-[260px] sm:w-[300px]">
       {properties.length > 1 && (
         <div className="bg-[var(--bg-alt)] border-b border-[var(--line)] px-4 py-2 flex justify-between items-center text-xs">
           <span className="font-semibold text-[var(--muted)]">
@@ -175,39 +175,42 @@ export default function ProjectMap({ properties }) {
   );
 
   return (
-    <section 
+    <section
       className={`${
-        isFullscreen 
-          ? "fixed inset-0 z-[9999] bg-white w-screen h-screen flex flex-col m-0 border-0" 
-          : "mt-8 border border-[var(--line)] bg-white relative transition-all duration-300"
-      }`} 
+        isFullscreen
+          ? "fixed inset-0 z-[9999] bg-white w-screen h-screen flex flex-col m-0 border-0"
+          : "mt-6 sm:mt-8 border border-[var(--line)] bg-white relative transition-all duration-300"
+      }`}
       data-testid="projects-map"
     >
-      <div className="p-5 md:p-6 border-b border-[var(--line)] flex justify-between items-center bg-white">
+      {/* Map header */}
+      <div className="p-4 sm:p-5 md:p-6 border-b border-[var(--line)] flex flex-wrap justify-between items-center gap-3 bg-white">
         <div>
           <div className="overline text-[var(--gold-deep)]">Project Map</div>
-          <p className="text-sm text-[var(--muted)] mt-1">
-            {properties.length} locations match the active filters.
+          <p className="text-xs sm:text-sm text-[var(--muted)] mt-1">
+            {properties.length} location{properties.length !== 1 ? "s" : ""} match the active filters.
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex items-center gap-2 flex-wrap">
           <button
             type="button"
             onClick={() => setIsSatellite(!isSatellite)}
-            className="btn-ghost !px-4 !py-2 text-[10px] uppercase tracking-wider flex items-center gap-1.5 border border-[var(--line)] bg-white hover:bg-[var(--bg-alt)] transition-all duration-300 font-semibold"
+            className="btn-ghost !px-3 !py-2 text-[10px] uppercase tracking-wider flex items-center gap-1.5 border border-[var(--line)] bg-white hover:bg-[var(--bg-alt)] transition-all duration-300 font-semibold"
           >
-            {isSatellite ? "🗺️ Road Map" : "🛰️ Satellite"}
+            {isSatellite ? "🗺️ Road" : "🛰️ Satellite"}
           </button>
           <button
             type="button"
             onClick={() => setIsFullscreen(!isFullscreen)}
-            className="btn-gold !px-4 !py-2 text-[10px] uppercase tracking-wider flex items-center gap-1.5 font-semibold"
+            className="btn-gold !px-3 !py-2 text-[10px] uppercase tracking-wider flex items-center gap-1.5 font-semibold"
           >
-            {isFullscreen ? "✕ Close" : "⛶ Fullscreen"}
+            {isFullscreen ? "✕ Close" : "⛶ Full"}
           </button>
         </div>
       </div>
-      <div className={`w-full ${isFullscreen ? "flex-1" : "h-[420px]"}`}>
+
+      {/* Map container — responsive height */}
+      <div className={`w-full ${isFullscreen ? "flex-1" : "h-[260px] sm:h-[360px] md:h-[420px]"}`}>
         <MapContainer
           center={DEFAULT_CENTER}
           zoom={10}

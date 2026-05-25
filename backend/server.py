@@ -50,12 +50,13 @@ ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / ".env")
 
 DEFAULT_ORG_ID = os.environ.get("DEFAULT_ORG_ID", "default-org")
-DEVELOPER_EMAIL = "developer@triad.ae"
-DEVELOPER_PASSWORD = "developer"
-OWNER_EMAIL = "owner@triad.ae"
-OWNER_PASSWORD = "onwer"
-STAFF_EMAIL = "normal@triad.ae"
-STAFF_PASSWORD = "normal"
+DEVELOPER_EMAIL = os.environ.get("DEVELOPER_EMAIL", "developer@triad.ae")
+DEVELOPER_PASSWORD = os.environ.get("DEVELOPER_PASSWORD", "developer")
+OWNER_EMAIL = os.environ.get("OWNER_EMAIL", "owner@triad.ae")
+OWNER_PASSWORD = os.environ.get("OWNER_PASSWORD", "owner")
+LEGACY_OWNER_PASSWORD = "onwer"
+STAFF_EMAIL = os.environ.get("STAFF_EMAIL", "normal@triad.ae")
+STAFF_PASSWORD = os.environ.get("STAFF_PASSWORD", "normal")
 REELLY_BASE = os.environ.get(
     "REELLY_API_BASE",
     "https://search-listings-production.up.railway.app/v1",
@@ -300,15 +301,18 @@ async def _upsert_default_user(
     role: str,
     name: str,
     organization_id: Optional[str],
+    legacy_passwords: tuple[str, ...] = (),
 ):
-    existing = await db_find_one("users", {"email": email.lower()})
+    existing = await db_find_one("users", {"email": email.strip().lower()})
     created_at = existing.get("created_at") if existing else now_iso()
-    
+
     # Keep the existing password hash if the user already exists in the database
     p_hash = existing["password_hash"] if existing else hash_password(password)
-    
+    if existing and any(verify_password(old_password, p_hash) for old_password in legacy_passwords):
+        p_hash = hash_password(password)
+
     doc = {
-        "email": email.lower(),
+        "email": email.strip().lower(),
         "password_hash": p_hash,
         "name": name,
         "role": role,
@@ -345,13 +349,15 @@ async def seed_default_users():
         role=ROLE_OWNER,
         name="Organization Owner",
         organization_id=DEFAULT_ORG_ID,
+        legacy_passwords=(LEGACY_OWNER_PASSWORD,),
     )
     await _upsert_default_user(
         email="onwer@triad.ae",
-        password=OWNER_PASSWORD,
+        password=LEGACY_OWNER_PASSWORD,
         role=ROLE_OWNER,
-        name="Organization Owner (Typo Email)",
+        name="Organization Owner (Legacy Typo Email)",
         organization_id=DEFAULT_ORG_ID,
+        legacy_passwords=(OWNER_PASSWORD,),
     )
     await _upsert_default_user(
         email=STAFF_EMAIL,
@@ -389,7 +395,7 @@ async def shutdown_db_client():
 @api_router.post("/auth/login")
 async def login(payload: LoginIn, request: Request):
     check_rate_limit(request, limit=10, window_sec=60)
-    user = await db_find_one("users", {"email": payload.email.lower()})
+    user = await db_find_one("users", {"email": payload.email.strip().lower()})
     if not user or not verify_password(payload.password, user["password_hash"]):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
     token = create_access_token(user["id"], user["role"], user.get("organization_id"))
@@ -810,14 +816,20 @@ async def get_team_member(member_id: str):
 
 
 @api_router.post("/team")
-async def create_team_member(payload: TeamMemberIn, _=Depends(require_developer)):
+async def create_team_member(payload: TeamMemberIn, user=Depends(get_current_user)):
+    if user.get("role") != ROLE_DEVELOPER:
+        if user.get("role") not in {ROLE_STAFF, ROLE_OWNER} or not payload.email or payload.email.lower() != user["email"].lower():
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Insufficient permissions")
     member = TeamMemberOut(**payload.model_dump())
     await db_insert("team", member.model_dump())
     return member
 
 
 @api_router.put("/team/{member_id}")
-async def update_team_member(member_id: str, payload: TeamMemberIn, _=Depends(require_developer)):
+async def update_team_member(member_id: str, payload: TeamMemberIn, user=Depends(get_current_user)):
+    if user.get("role") != ROLE_DEVELOPER:
+        if user.get("role") not in {ROLE_STAFF, ROLE_OWNER} or not payload.email or payload.email.lower() != user["email"].lower():
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Insufficient permissions")
     updated = await db_update("team", member_id, payload.model_dump())
     if not updated:
         raise HTTPException(status_code=404, detail="Team member not found")
@@ -966,4 +978,3 @@ async def serve_react(full_path: str):
 
     # All other paths → hand off to React Router
     return FileResponse(index_file)
-

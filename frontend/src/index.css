@@ -542,3 +542,132 @@ body {
   display: block;
   margin-top: -2px;
 }
+
+/* ──────────────────────────────────────────────────────
+   Admin Login Page Background
+────────────────────────────────────────────────────── */
+.admin-login-bg {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(197, 160, 89, 0.12) 0%, transparent 70%),
+    linear-gradient(160deg, #0d0d0d 0%, #1a1714 40%, #0f0e0c 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-login-decoration {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 15% 85%, rgba(197, 160, 89, 0.06) 0%, transparent 40%),
+    radial-gradient(circle at 85% 15%, rgba(197, 160, 89, 0.06) 0%, transparent 40%);
+}
+
+/* Gold grid watermark */
+.admin-login-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image:
+    linear-gradient(var(--gold) 1px, transparent 1px),
+    linear-gradient(90deg, var(--gold) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* ──────────────────────────────────────────────────────
+   Admin Sidebar Drawer Animation
+────────────────────────────────────────────────────── */
+@keyframes slideInLeft {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0); }
+}
+
+/* ──────────────────────────────────────────────────────
+   Admin Page – Responsive Tweaks
+────────────────────────────────────────────────────── */
+
+/* Prevent body scroll when mobile sidebar is open */
+body.admin-sidebar-open {
+  overflow: hidden;
+}
+
+/* Make tables inside admin pages horizontally scrollable */
+.admin-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Thin scroll indicator on mobile */
+.admin-table-wrap::-webkit-scrollbar {
+  height: 4px;
+}
+.admin-table-wrap::-webkit-scrollbar-thumb {
+  background: var(--gold);
+  border-radius: 2px;
+}
+
+/* Ensure admin sidebar never causes horizontal overflow on body */
+.admin-sidebar-fixed {
+  height: 100vh;
+  min-height: 100vh;
+}
+
+@media (max-width: 1023px) {
+  .admin-sidebar-fixed {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    min-height: 100vh;
+    z-index: 50;
+  }
+}
+
+/* Popup notification entrance animation */
+@keyframes popupSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.popup-enter {
+  animation: popupSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Map container – never overflow horizontally */
+.leaflet-container {
+  max-width: 100%;
+}
+
+/* Mobile: hide map attribution to save space */
+@media (max-width: 640px) {
+  .leaflet-control-attribution {
+    display: none !important;
+  }
+  .custom-area-marker-label {
+    font-size: 8px;
+    padding: 3px 6px;
+  }
+  .custom-project-popup .leaflet-popup-content {
+    width: 260px !important;
+  }
+}
+
+/* Developer Admin – ensure tab bar wraps and pt offset works on mobile */
+@media (max-width: 640px) {
+  .dev-admin-tabs {
+    overflow-x: auto;
+    padding-bottom: 4px;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+  }
+  .dev-admin-tabs::-webkit-scrollbar {
+    display: none;
+  }
+}

@@ -40,18 +40,28 @@ export default function TeamList() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10" data-reveal>
               {team.map((t) => (
                 <div key={t.id} className="group" data-testid={`about-team-${t.name.toLowerCase().replace(/\s+/g, "-")}`}>
-                  <div className="aspect-[3/4] img-zoom bg-[var(--bg-alt)] relative">
-                    <img src={t.photo} alt={t.name} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
-                    <div className="absolute inset-0 bg-[var(--ink)]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                       <Link to={`/team/${t.id}`} className="btn-gold !px-6 !py-3 border-none">View Profile</Link>
+                  <Link to={`/team/${t.id}`} className="block group/link">
+                    <div className="aspect-[3/4] img-zoom bg-[var(--bg-alt)] relative">
+                      {t.photo ? (
+                        <img src={t.photo} alt={t.name} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-[var(--ink)] text-white">
+                          <span className="font-display text-6xl text-[var(--gold)]">
+                            {t.name.split(" ").map((part) => part[0]).join("").slice(0, 2)}
+                          </span>
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-[var(--ink)]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                         <span className="btn-gold !px-6 !py-3 border-none">View Profile</span>
+                      </div>
                     </div>
-                  </div>
-                  <h3 className="font-display text-2xl mt-5">{t.name}</h3>
-                  <div className="overline text-[var(--gold-deep)] mt-1">{t.role}</div>
-                  {t.expertise && <p className="text-sm mt-3 text-[var(--ink-2)]"><strong className="font-medium">Expertise:</strong> {t.expertise}</p>}
-                  {t.focus && <p className="text-sm text-[var(--ink-2)]"><strong className="font-medium">Focus:</strong> {t.focus}</p>}
+                    <h3 className="font-display text-2xl mt-5 text-[var(--ink)] group-hover/link:text-[var(--gold-deep)] transition-colors">{t.name}</h3>
+                    <div className="overline text-[var(--gold-deep)] mt-1">{t.role || "Property Consultant"}</div>
+                    {t.expertise && <p className="text-sm mt-3 text-[var(--ink-2)]"><strong className="font-medium">Expertise:</strong> {t.expertise}</p>}
+                    {t.focus && <p className="text-sm text-[var(--ink-2)]"><strong className="font-medium">Focus:</strong> {t.focus}</p>}
+                  </Link>
                   
-                  <div className="flex gap-3 mt-4 text-xs">
+                  <div className="flex gap-3 mt-4 text-xs relative z-10">
                     {t.phone && <a href={`tel:${t.phone.replace(/\s/g, "")}`} className="flex items-center gap-1.5 hover:text-[var(--gold-deep)]"><Phone size={12} />Call</a>}
                     {t.email && <a href={`mailto:${t.email}`} className="flex items-center gap-1.5 hover:text-[var(--gold-deep)]"><Mail size={12} />Email</a>}
                   </div>

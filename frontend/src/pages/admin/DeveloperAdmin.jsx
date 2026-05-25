@@ -5,6 +5,15 @@ import { Plus, Trash, LogOut, Edit, X } from "lucide-react";
 
 const TABS = ["team", "owners", "projects", "blogs", "home", "popup"];
 
+const TAB_LABELS = {
+  team: "Team",
+  owners: "Owners",
+  projects: "Projects",
+  blogs: "Blogs",
+  home: "Home",
+  popup: "Popup",
+};
+
 const EMPTY_PROJECT_FORM = {
   id: "",
   name: "",
@@ -455,36 +464,67 @@ export default function DeveloperAdmin() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--bg-alt)] pt-32 pb-20">
-      <div className="container-x">
-        <div className="flex justify-between items-start mb-10">
-          <div>
-            <h1 className="font-display text-4xl">Developer Console</h1>
-            <p className="text-[var(--muted)] mt-2">{user?.email}</p>
-            {health && (
-              <p className="text-xs text-[var(--muted)] mt-1">
-                DB: {health.database} · {health.projects} projects · {health.users} users
-              </p>
-            )}
+    <div className="min-h-screen bg-[#f4f2ee] flex">
+      <aside className="admin-sidebar-fixed hidden lg:flex fixed top-0 left-0 h-screen min-h-screen w-64 bg-[var(--ink)] flex-col z-50 lg:static lg:flex-shrink-0">
+        <div className="px-6 py-5 border-b border-white/10">
+          <div className="flex items-center gap-3 min-w-0">
+            <img
+              src="/triad_logo.jpeg"
+              alt="Triad Realty"
+              className="h-9 w-auto object-contain flex-shrink-0"
+            />
+            <div className="min-w-0">
+              <p className="font-display text-white text-sm leading-tight truncate">Triad Realty</p>
+              <p className="text-white/40 text-[9px] uppercase tracking-widest mt-0.5">Developer Portal</p>
+            </div>
           </div>
-          <button type="button" onClick={logout} className="btn-ghost flex gap-2 items-center">
-            <LogOut size={16} /> Logout
-          </button>
         </div>
 
-        <div className="flex gap-2 mb-8 flex-wrap">
+        <div className="px-6 py-5 border-b border-white/10">
+          <p className="text-white text-sm font-medium truncate">Platform Developer</p>
+          <p className="text-white/40 text-xs truncate">{user?.email}</p>
+          {health && (
+            <p className="text-white/35 text-[10px] mt-2 leading-relaxed">
+              DB: {health.database} · {health.projects} projects · {health.users} users
+            </p>
+          )}
+        </div>
+
+        <nav className="flex-1 px-4 py-6 space-y-1">
           {TABS.map((t) => (
             <button
               key={t}
               type="button"
               onClick={() => setTab(t)}
-              className={`px-4 py-2 text-sm uppercase tracking-widest border ${
-                tab === t ? "border-[var(--gold)] bg-white" : "border-[var(--line)]"
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-colors text-left ${
+                tab === t
+                  ? "bg-[var(--gold)] text-[var(--ink)] font-medium"
+                  : "text-white/60 hover:text-white hover:bg-white/10"
               }`}
             >
-              {t}
+              {TAB_LABELS[t]}
             </button>
           ))}
+        </nav>
+
+        <div className="px-4 pb-6">
+          <button
+            type="button"
+            onClick={logout}
+            className="w-full flex items-center gap-2 px-4 py-2.5 text-white/50 hover:text-white text-xs uppercase tracking-widest transition-colors rounded-lg hover:bg-white/10"
+          >
+            <LogOut size={14} /> Logout
+          </button>
+        </div>
+      </aside>
+
+      <main className="flex-1 min-w-0 overflow-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+          <div className="flex flex-wrap justify-between items-start gap-4 mb-8 sm:mb-10">
+          <div>
+            <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl">Developer Console</h1>
+            <p className="text-[var(--muted)] text-sm mt-1.5">Manage site content, team profiles, owners, and launch settings.</p>
+          </div>
         </div>
 
         {actionError && !teamModal && !projectModal && !blogModal && (
@@ -792,11 +832,12 @@ export default function DeveloperAdmin() {
             )}
           </>
         )}
-      </div>
+        </div>
+      </main>
 
       {teamModal && (
         <div className="fixed inset-0 z-[100] bg-black/60 flex justify-end">
-          <div className="w-full max-w-xl bg-white h-full overflow-y-auto border-l border-[var(--gold)]/30 shadow-2xl p-6">
+          <div className="w-full max-w-xl sm:max-w-lg bg-white h-full overflow-y-auto border-l border-[var(--gold)]/30 shadow-2xl p-4 sm:p-6">
             <div className="flex justify-between items-center mb-6">
               <h2 className="font-display text-2xl">{editingTeamId ? "Edit Member" : "Add Member"}</h2>
               <button type="button" onClick={() => setTeamModal(false)}>
